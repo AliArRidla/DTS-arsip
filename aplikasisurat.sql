@@ -1,89 +1,94 @@
--- phpMyAdmin SQL Dump
--- version 5.1.0
--- https://www.phpmyadmin.net/
+-- -------------------------------------------------------------
+-- TablePlus 4.5.0(396)
 --
--- Host: 127.0.0.1
--- Generation Time: May 26, 2021 at 05:54 PM
--- Server version: 10.4.18-MariaDB
--- PHP Version: 7.3.27
-
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-START TRANSACTION;
-SET time_zone = "+00:00";
+-- https://tableplus.com/
+--
+-- Database: arsip
+-- Generation Time: 2021-10-25 07:39:34.6680
+-- -------------------------------------------------------------
 
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8mb4 */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
---
--- Database: `aplikasisurat`
---
 
--- --------------------------------------------------------
-
---
--- Table structure for table `pengguna`
---
+CREATE TABLE `kategori` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `type_kategori` varchar(30) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE `pengguna` (
-  `id` int(15) NOT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
   `username` varchar(25) NOT NULL,
   `password` varchar(255) DEFAULT NULL,
   `nama` varchar(35) NOT NULL,
   `email` varchar(500) NOT NULL,
-  `photo` varchar(500) NOT NULL,
+  `photo` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   `login_session_key` varchar(255) DEFAULT NULL,
   `email_status` varchar(255) DEFAULT NULL,
   `password_expire_date` datetime DEFAULT '2021-08-24 00:00:00',
   `password_reset_key` varchar(255) DEFAULT NULL,
-  `user_role_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `pengguna`
---
-
-INSERT INTO `pengguna` (`id`, `username`, `password`, `nama`, `email`, `photo`, `login_session_key`, `email_status`, `password_expire_date`, `password_reset_key`, `user_role_id`) VALUES
-(1, 'admin', '$2y$10$QVkGPnb1Ag.9Ds8Mhq31iuoRV9/TY8sqrrykLMK1gd4jUEc6hcvtm', 'Administrator', 'admin@gmail.com', 'http://localhost/appsuratmasukkeluar/uploads/files/1621929810.png', NULL, NULL, '2021-08-26 11:02:24', NULL, 1),
-(2, 'user', '$2y$10$pC2c7jyWUK3HwQo4tCeFD..jB7EK4T5jRkMb7P1yMs2Dpnzd.XWbi', 'User', '12452@gamaial.com', 'http://localhost/appsuratmasukkeluar/uploads/files/1622020736.png', NULL, NULL, '2021-08-24 00:00:00', NULL, 2);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `roles`
---
-
-CREATE TABLE `roles` (
-  `role_id` int(11) NOT NULL,
-  `role_name` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `roles`
---
-
-INSERT INTO `roles` (`role_id`, `role_name`) VALUES
-(1, 'Administrator'),
-(2, 'User');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `role_permissions`
---
+  `user_role_id` int NOT NULL,
+  `nim` int DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE `role_permissions` (
-  `permission_id` int(11) NOT NULL,
-  `role_id` int(11) NOT NULL,
+  `permission_id` int NOT NULL AUTO_INCREMENT,
+  `role_id` int NOT NULL,
   `page_name` varchar(255) NOT NULL,
-  `action_name` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `action_name` varchar(255) NOT NULL,
+  PRIMARY KEY (`permission_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=48 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
---
--- Dumping data for table `role_permissions`
---
+CREATE TABLE `roles` (
+  `role_id` int NOT NULL AUTO_INCREMENT,
+  `role_name` varchar(255) NOT NULL,
+  PRIMARY KEY (`role_id`),
+  UNIQUE KEY `role_name` (`role_name`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `surat_keluar` (
+  `No_Agenda` int NOT NULL AUTO_INCREMENT,
+  `tanggal_surat` date NOT NULL,
+  `Tujuan_surat` varchar(255) NOT NULL,
+  `Nomor_surat` varchar(255) NOT NULL,
+  `perihal` varchar(500) NOT NULL,
+  `file_surat` varchar(500) NOT NULL,
+  PRIMARY KEY (`No_Agenda`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `surat_masuk` (
+  `No_Agenda` int NOT NULL AUTO_INCREMENT,
+  `Nomor_Surat` varchar(255) NOT NULL,
+  `Tanggal_surat` date NOT NULL,
+  `tanggal_terima` date NOT NULL,
+  `Asal_surat` varchar(255) NOT NULL,
+  `perihal` varchar(500) NOT NULL,
+  `file_surat` varchar(500) NOT NULL,
+  `penerima` varchar(35) NOT NULL,
+  `type_kategori_id` int DEFAULT NULL,
+  PRIMARY KEY (`No_Agenda`),
+  KEY `type_kategori_id` (`type_kategori_id`),
+  CONSTRAINT `surat_masuk_ibfk_1` FOREIGN KEY (`type_kategori_id`) REFERENCES `kategori` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+INSERT INTO `kategori` (`id`, `type_kategori`) VALUES
+(1, 'Undangan'),
+(2, 'Pengumuman'),
+(3, 'Nota Dinas'),
+(4, 'Pemberitahuan');
+
+INSERT INTO `pengguna` (`id`, `username`, `password`, `nama`, `email`, `photo`, `login_session_key`, `email_status`, `password_expire_date`, `password_reset_key`, `user_role_id`, `nim`) VALUES
+(1, 'admin', '$2y$10$QVkGPnb1Ag.9Ds8Mhq31iuoRV9/TY8sqrrykLMK1gd4jUEc6hcvtm', 'Administrator', 'admin@gmail.com', 'http://localhost/appsuratmasukkeluar/uploads/files/1621929810.png', NULL, NULL, '2021-08-26 11:02:24', NULL, 1, NULL),
+(5, 'ali', '$2y$10$0dH/XJVpxBpC51dR4A7MsenQfQPtTZrl1BwwOl5gkQFCRIDrcCWRW', 'ali', 'ali@gmail.com', 'http://127.0.0.1:8000/uploads/files/1635083464.jpg', NULL, NULL, '2021-08-24 00:00:00', NULL, 2, 1931710069);
 
 INSERT INTO `role_permissions` (`permission_id`, `role_id`, `page_name`, `action_name`) VALUES
 (1, 1, 'pengguna', 'list'),
@@ -134,127 +139,21 @@ INSERT INTO `role_permissions` (`permission_id`, `role_id`, `page_name`, `action
 (46, 2, 'pengguna', 'accountedit'),
 (47, 2, 'pengguna', 'accountview');
 
--- --------------------------------------------------------
+INSERT INTO `roles` (`role_id`, `role_name`) VALUES
+(1, 'Administrator'),
+(2, 'User');
 
---
--- Table structure for table `surat_keluar`
---
+INSERT INTO `surat_masuk` (`No_Agenda`, `Nomor_Surat`, `Tanggal_surat`, `tanggal_terima`, `Asal_surat`, `perihal`, `file_surat`, `penerima`, `type_kategori_id`) VALUES
+(11, 'SM-002', '2021-10-25', '2021-10-25', 'Dinas Kehutanan', 'Monyet kabur', 'http://127.0.0.1:8000/uploads/files/19xks46lyc38mhn.pdf', 'ali', 4),
+(12, 'SM-003', '2021-10-25', '2021-10-25', 'Dinas Perumahan', 'pembangunan gubuk', 'http://127.0.0.1:8000/uploads/files/83l4_dj7epaz6im.pdf', 'ali', 2),
+(14, 'SM-005', '2021-10-25', '2021-10-25', 'Dinas Kehutanan', 'Buaya kabur ke pasar', 'http://127.0.0.1:8000/uploads/files/w4i_198z5uj73et.pdf', 'admin', 4);
 
-CREATE TABLE `surat_keluar` (
-  `No_Agenda` int(15) NOT NULL,
-  `tanggal_surat` date NOT NULL,
-  `Tujuan_surat` varchar(255) NOT NULL,
-  `Nomor_surat` varchar(255) NOT NULL,
-  `perihal` varchar(500) NOT NULL,
-  `file_surat` varchar(500) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Dumping data for table `surat_keluar`
---
 
-INSERT INTO `surat_keluar` (`No_Agenda`, `tanggal_surat`, `Tujuan_surat`, `Nomor_surat`, `perihal`, `file_surat`) VALUES
-(1, '2021-05-24', 'Surabaya', '123/2021-SRB', 'Terima Kerjasama', 'http://localhost/appsuratmasukkeluar/uploads/files/ivb7pc36wzgqn_f.jpg'),
-(2, '2021-05-24', 'Surabaya', '123/2021-jkt', 'Persetujuan kerjasama', 'http://localhost/appsuratmasukkeluar/uploads/files/4ekix7gm95zw1fa.pdf'),
-(3, '2021-05-26', 'Surabaya', '123/2021-jkt-90', 'Persetujuan Kerjasam', 'http://localhost/appsuratmasukkeluar/uploads/files/qwmz0v5obs2gtky.pdf');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `surat_masuk`
---
-
-CREATE TABLE `surat_masuk` (
-  `No_Agenda` int(15) NOT NULL,
-  `Nomor_Surat` varchar(255) NOT NULL,
-  `Tanggal_surat` date NOT NULL,
-  `tanggal_terima` date NOT NULL,
-  `Asal_surat` varchar(255) NOT NULL,
-  `perihal` varchar(500) NOT NULL,
-  `file_surat` varchar(500) NOT NULL,
-  `penerima` varchar(35) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `surat_masuk`
---
-
-INSERT INTO `surat_masuk` (`No_Agenda`, `Nomor_Surat`, `Tanggal_surat`, `tanggal_terima`, `Asal_surat`, `perihal`, `file_surat`, `penerima`) VALUES
-(1, 'PLK/123345', '2021-05-24', '2021-05-24', 'Surabaya', 'Perjanjian Kerjasama Antara dua perusahaan', 'http://localhost/appsuratmasukkeluar/uploads/files/h7td8ly3cpavxi1.jpg', 'admin'),
-(2, '8199882', '2021-05-25', '2021-05-26', 'jabiren', 'Kerjasama', 'http://localhost/appsuratmasukkeluar/uploads/files/n681yqz29f4d53s.pdf', 'admin'),
-(3, '12345678', '2021-05-26', '2021-05-26', 'Surabaya', 'Kerjasama', 'http://localhost/appsuratmasukkeluar/uploads/files/v7j0bps_3wk65fc.pdf', 'admin'),
-(4, '9098-JKt-2021', '2021-05-12', '2021-05-26', 'Surabaya', 'Kerjasama', 'http://localhost/appsuratmasukkeluar/uploads/files/jpy5cfwhdlx3bz4.pdf', 'admin');
-
---
--- Indexes for dumped tables
---
-
---
--- Indexes for table `pengguna`
---
-ALTER TABLE `pengguna`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `roles`
---
-ALTER TABLE `roles`
-  ADD PRIMARY KEY (`role_id`),
-  ADD UNIQUE KEY `role_name` (`role_name`);
-
---
--- Indexes for table `role_permissions`
---
-ALTER TABLE `role_permissions`
-  ADD PRIMARY KEY (`permission_id`);
-
---
--- Indexes for table `surat_keluar`
---
-ALTER TABLE `surat_keluar`
-  ADD PRIMARY KEY (`No_Agenda`);
-
---
--- Indexes for table `surat_masuk`
---
-ALTER TABLE `surat_masuk`
-  ADD PRIMARY KEY (`No_Agenda`);
-
---
--- AUTO_INCREMENT for dumped tables
---
-
---
--- AUTO_INCREMENT for table `pengguna`
---
-ALTER TABLE `pengguna`
-  MODIFY `id` int(15) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
-
---
--- AUTO_INCREMENT for table `roles`
---
-ALTER TABLE `roles`
-  MODIFY `role_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
-
---
--- AUTO_INCREMENT for table `role_permissions`
---
-ALTER TABLE `role_permissions`
-  MODIFY `permission_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=48;
-
---
--- AUTO_INCREMENT for table `surat_keluar`
---
-ALTER TABLE `surat_keluar`
-  MODIFY `No_Agenda` int(15) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
-
---
--- AUTO_INCREMENT for table `surat_masuk`
---
-ALTER TABLE `surat_masuk`
-  MODIFY `No_Agenda` int(15) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
-COMMIT;
-
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
